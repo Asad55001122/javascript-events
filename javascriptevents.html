@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Scientific Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e3f9ff;
+        }
+        .calculator {
+            border: 4px solid rgb(45, 41, 41);
+            padding: 20px;
+            border-radius: 10px;
+            background: #3a4452;
+        }
+        .calculator form input {
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            padding: 20px;
+            height: 60px;
+            width: 60px;
+            box-shadow: -8px -8px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.2);
+            background: transparent;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+            margin: 10px;
+        }
+        .display {
+            display: flex;
+            margin: 20px 0;
+            justify-content: flex-end;
+        }
+        form .display input {
+            text-align: right;
+            box-shadow: none;
+            font-size: 45px;
+            flex: 1;
+        }
+        form input.equal {
+            width: 145px;
+            background-color: rgb(217, 99, 56);
+        }
+        form input.color {
+            color: orange;
+        }
+        form input#toggle {
+            width: 315px;
+            background-color: rgb(217, 99, 56);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <form>
+                <div class="display">
+                    <input type="text" name="display" id="dis">
+                </div>
+                <div id="simpleBtn">
+                    <div>
+                        <input type="button" value="AC" class="color" onclick="clearDisplay()">
+                        <input type="button" value="DE" class="color" onclick="deleteLastChar()">
+                        <input type="button" value="%" class="color" onclick="appendOperator('%')">
+                        <input type="button" value="/" class="color" onclick="appendOperator('/')">
+                    </div>
+                    <div>
+                        <input type="button" value="7" onclick="appendNumber('7')">
+                        <input type="button" value="8" onclick="appendNumber('8')">
+                        <input type="button" value="9" onclick="appendNumber('9')">
+                        <input type="button" value="*" class="color" onclick="appendOperator('*')">
+                    </div>
+                    <div>
+                        <input type="button" value="4" onclick="appendNumber('4')">
+                        <input type="button" value="5" onclick="appendNumber('5')">
+                        <input type="button" value="6" onclick="appendNumber('6')">
+                        <input type="button" value="-" class="color" onclick="appendOperator('-')">
+                    </div>
+                    <div>
+                        <input type="button" value="1" onclick="appendNumber('1')">
+                        <input type="button" value="2" onclick="appendNumber('2')">
+                        <input type="button" value="3" onclick="appendNumber('3')">
+                        <input type="button" value="+" class="color" onclick="appendOperator('+')">
+                    </div>
+                    <div>
+                        <input type="button" value="0" onclick="appendNumber('0')">
+                        <input type="button" value="." onclick="appendOperator('.')">
+                        <input type="button" value="=" class="equal" onclick="calculateResult()">
+                    </div>
+                </div>
+                <input type="button" value="toggle" id="toggle" onclick="toggleCalculator()">
+                <div id="sciBtn" style="display: none;">
+                    <div>
+                        <input type="button" value="sin" onclick="calculateFunction('sin')">
+                        <input type="button" value="cos" onclick="calculateFunction('cos')">
+                        <input type="button" value="tan" onclick="calculateFunction('tan')">
+                        <input type="button" value="π" onclick="appendConstant('π')">
+                    </div>
+                    <div>
+                        <input type="button" value="e" onclick="appendConstant('e')">
+                        <input type="button" value="^" onclick="appendOperator('**')">
+                        <input type="button" value="√" onclick="calculateFunction('sqrt')">
+                        <input type="button" value="log" onclick="calculateFunction('log')">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> 
+
+    <script>
+        const display = document.getElementById('dis');
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLastChar() {
+            display.value = display.value.toString().slice(0, -1);
+        }
+
+        function appendNumber(number) {
+            display.value += number;
+        }
+
+        function appendOperator(operator) {
+            display.value += operator;
+        }
+
+        function appendConstant(constant) {
+            if (constant === 'π') {
+                display.value += Math.PI;
+            } else if (constant === 'e') {
+                display.value += Math.E;
+            }
+        }
+
+        function calculateResult() {
+            try {
+                display.value = eval(display.value);
+            } catch (e) {
+                display.value = 'Error';
+            }
+        }
+
+        function calculateFunction(func) {
+            try {
+                if (func === 'sin') {
+                    display.value = Math.sin(eval(display.value));
+                } else if (func === 'cos') {
+                    display.value = Math.cos(eval(display.value));
+                } else if (func === 'tan') {
+                    display.value = Math.tan(eval(display.value));
+                } else if (func === 'sqrt') {
+                    display.value = Math.sqrt(eval(display.value));
+                } else if (func === 'log') {
+                    display.value = Math.log10(eval(display.value));
+                }
+            } catch (e) {
+                display.value = 'Error';
+            }
+        }
+
+        function toggleCalculator() {
+            const simpleBtn = document.getElementById('simpleBtn');
+            const sciBtn = document.getElementById('sciBtn');
+            if (simpleBtn.style.display === 'none') {
+                simpleBtn.style.display = 'block';
+                sciBtn.style.display = 'none';
+            } else {
+                simpleBtn.style.display = 'none';
+                sciBtn.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
